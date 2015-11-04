@@ -138,10 +138,10 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <Label VerticalContentAlignment="Center" FontWeight="Bold" Grid.Row="0" Content="{Binding Name}"/>
-                                            <Button Grid.Column="1" Style="{StaticResource DefBtn}" Margin="2" Command="{Binding StartCommand}" IsEnabled="{Binding CanStart}">Start</Button>
-                                            <Button Grid.Column="2" Style="{StaticResource DefBtn}" Margin="2" Command="{Binding StopCommand}" IsEnabled="{Binding CanStop}">Stop</Button>
+                                            <Button Grid.Column="1" Style="{StaticResource DefBtn}" Margin="2" Command="{Binding StartCommand}" IsEnabled="{Binding CanStart}">开始</Button>
+                                            <Button Grid.Column="2" Style="{StaticResource DefBtn}" Margin="2" Command="{Binding StopCommand}" IsEnabled="{Binding CanStop}">停止</Button>
                                             <Button Grid.Column="3" Style="{StaticResource DefBtn}" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveTransferCommand}"
-                                        CommandParameter="{Binding}" IsEnabled="{Binding CanDelete}">Remove</Button>
+                                        CommandParameter="{Binding}" IsEnabled="{Binding CanDelete}">删除</Button>
                                         </Grid>
                                         <ProgressBar IsIndeterminate="{Binding ReceivedAny}" HorizontalAlignment="Stretch" Margin="4" Maximum="1" Height="12" Grid.Row="3" Value="{Binding Progress}" LargeChange="0.01" SmallChange="0.001"/>
                                         <Label Content="{Binding NumericProgress, Converter={StaticResource NumericProgressToStringConverter}}" Grid.Row="2"/>

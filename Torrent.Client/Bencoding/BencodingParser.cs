@@ -89,7 +89,16 @@ namespace Torrent.Client.Bencoding
             {
                 string key = ParseElement() as BencodedString;
                 if (key == null) throw new BencodingParserException("Key is expected to be a string.");
-                list.Add(key, ParseElement());
+                IBencodedElement v;
+                //if (key == "name")
+                //{
+                //    v = ParseString(true);
+                //}
+                //else
+                {
+                    v = ParseElement();
+                }
+                list.Add(key,v);
             }
             reader.Read();
             return list;
@@ -111,7 +120,7 @@ namespace Torrent.Client.Bencoding
             return list;
         }
 
-        private static BencodedString ParseString()
+        private static BencodedString ParseString(bool utf8=false)
         {
             char lenEndChar = ':';
             if (!char.IsDigit((char) reader.PeekChar()))
@@ -121,9 +130,16 @@ namespace Torrent.Client.Bencoding
             int len;
             var byteResult = new byte[length];
             if ((len = reader.Read(byteResult, 0, (int) length)) != length)
-                throw new BencodingParserException(
-                    string.Format("Did not read the expected amount of {0} bytes, {1} instead.", length, len));
-            return new BencodedString(new string(byteResult.Select(b => (char) b).ToArray()));
+                throw new BencodingParserException(string.Format("Did not read the expected amount of {0} bytes, {1} instead.", length, len));
+            if(utf8)
+            {
+                return System.Text.Encoding.UTF8.GetString(byteResult);
+            }
+            else
+            {
+                return new BencodedString(new string(byteResult.Select(b => (char)b).ToArray()));
+            }
+          
         }
 
         private static BencodedInteger ParseInteger()

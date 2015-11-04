@@ -16,19 +16,19 @@ namespace Torrent.Gui
                 switch (mode)
                 {
                     case Mode.Stopped:
-                        return "Stopped.";
+                        return "暂停";
                     case Mode.Seed:
-                        return "Seeding...";
+                        return "做种中...";
                     case Mode.Idle:
-                        return "Idle.";
+                        return "空闲";
                     case Mode.Download:
-                        return "Downloading...";
+                        return "下载中...";
                     case Mode.Error:
-                        return "An error occured.";
+                        return "错误";
                     case Mode.Hash:
-                        return "Hashing...";
+                        return "正在计算文件(Hashing)";
                     case Mode.Completed:
-                        return "Completed.";
+                        return "完成.";
                 }
             }
             return null;
