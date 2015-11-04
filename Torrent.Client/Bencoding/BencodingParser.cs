@@ -90,15 +90,7 @@ namespace Torrent.Client.Bencoding
                 string key = ParseElement() as BencodedString;
                 if (key == null) throw new BencodingParserException("Key is expected to be a string.");
                 IBencodedElement v;
-                //if (key == "name")
-                //{
-                //    v = ParseString(true);
-                //}
-                //else
-                {
-                    v = ParseElement();
-                }
-                list.Add(key,v);
+                list.Add(key, ParseElement());
             }
             reader.Read();
             return list;

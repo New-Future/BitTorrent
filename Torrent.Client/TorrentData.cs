@@ -192,7 +192,7 @@ namespace Torrent.Client
             Files = decodedFiles.AsReadOnly();
             PieceLength = pieceLength;
             PieceCount = Checksums.Count;
-            Name = name;
+            Name = Encoding.UTF8.GetString(name.ToString().ToCharArray().Select(b => (byte)b).ToArray());
             InfoHash = ComputeInfoHash(info);
             Announces = CreateAnnouces(AnnounceURL, AnnounceList);
             TotalLength = Files.Sum(f => f.Length);
