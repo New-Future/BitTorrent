@@ -26,10 +26,11 @@ namespace Torrent.Client
             int seed = DateTime.Now.Millisecond + DateTime.Now.Minute + DateTime.Now.Day + ID_HEAD.Length;
             random = new Random(seed);
             PeerId = new string(GeneratePeerId().Select(b => (char) b).ToArray());
-
+            Agent = "uTorrent/3130(27385)";
             BindSocket();
         }
 
+        public string Agent;
         public string DownloadFolder { get; set; }
 
         public string Version { get { return ID_HEAD.Trim('-').Trim('R').Trim('T'); } }

@@ -27,7 +27,10 @@ namespace Torrent.Gui
             const int KB = 1024;
             const int MB = 1048576;
             const int GB = 1073741824;
-
+            if (size < 0)
+            {
+                return "NAN";
+            }
             if (size < KB)
             {
                 return string.Format("{0} bytes", size);

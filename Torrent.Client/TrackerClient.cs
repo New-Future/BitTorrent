@@ -108,7 +108,7 @@ namespace Torrent.Client
             var request = (HttpWebRequest) WebRequest.Create(announceURL + urlBuilder);
             request.KeepAlive = false;
             request.Method = "GET";
-
+            request.UserAgent = Global.Instance.Agent;
             try
             {
                 WebResponse response = request.GetResponse();
