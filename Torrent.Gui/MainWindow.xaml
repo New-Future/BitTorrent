@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Torrent.Gui"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
-        Title="NKbt-Torrent" Height="350" Width="525" WindowStartupLocation="CenterScreen" Icon="icon.ico">
+        Title="NKbt-Torrent" Height="350" Width="525" WindowStartupLocation="CenterScreen" Icon="bt.ico">
     <Window.Resources>
         <local:ModeToStringConverter x:Key="ModeToStringConverter"/>
         <local:ModeToBackgroundBrushConverter x:Key="ModeToBackgroundBrushConverter"/>
