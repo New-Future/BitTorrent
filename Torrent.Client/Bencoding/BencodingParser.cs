@@ -6,7 +6,7 @@ using System.Linq;
 namespace Torrent.Client.Bencoding
 {
     /// <summary>
-    /// Represents a bencoded node type.
+    /// Bencoding的编码格式
     /// </summary>
     internal enum BencodedNodeType
     {
@@ -25,7 +25,7 @@ namespace Torrent.Client.Bencoding
         private static Stream stream;
 
         /// <summary>
-        /// Parses the bencoded string into a tree of bencoded elements.
+        /// 解析编码后的string转换成Bencoding对象
         /// </summary>
         /// <remarks>If byte data is contained the the string, refrain from using this method and use Decode(byte[]) instead.</remarks>
         /// <param name="bencoded">The bencoded string to parse.</param>
@@ -37,7 +37,7 @@ namespace Torrent.Client.Bencoding
         }
 
         /// <summary>
-        /// Parses the bencoded bytestring into a tree of bencoded elements.
+        /// 把字节流转换成Bencoding对象
         /// </summary>
         /// <param name="bencoded">The bencoded bytestring to parse.</param>
         /// <returns>The <c>IBencodedElement</c> representing the top node of the returned tree.</returns>
@@ -60,6 +60,10 @@ namespace Torrent.Client.Bencoding
             }
         }
 
+        /// <summary>
+        /// 转换一个数据
+        /// </summary>
+        /// <returns></returns>
         private static IBencodedElement ParseElement()
         {
             switch (CurrentNodeType())
@@ -77,6 +81,10 @@ namespace Torrent.Client.Bencoding
             }
         }
 
+        /// <summary>
+        /// 解析字典d:e
+        /// </summary>
+        /// <returns></returns>
         private static BencodedDictionary ParseDictionary()
         {
             char endChar = 'e';
@@ -89,13 +97,17 @@ namespace Torrent.Client.Bencoding
             {
                 string key = ParseElement() as BencodedString;
                 if (key == null) throw new BencodingParserException("Key is expected to be a string.");
-                IBencodedElement v;
                 list.Add(key, ParseElement());
             }
             reader.Read();
             return list;
         }
 
+
+        /// <summary>
+        /// 解析list l:e
+        /// </summary>
+        /// <returns></returns>
         private static BencodedList ParseList()
         {
             char endChar = 'e';
@@ -112,7 +124,11 @@ namespace Torrent.Client.Bencoding
             return list;
         }
 
-        private static BencodedString ParseString(bool utf8=false)
+        /// <summary>
+        /// 解析字符串
+        /// </summary>
+        /// <returns></returns>
+        private static BencodedString ParseString()
         {
             char lenEndChar = ':';
             if (!char.IsDigit((char) reader.PeekChar()))
@@ -123,17 +139,15 @@ namespace Torrent.Client.Bencoding
             var byteResult = new byte[length];
             if ((len = reader.Read(byteResult, 0, (int) length)) != length)
                 throw new BencodingParserException(string.Format("Did not read the expected amount of {0} bytes, {1} instead.", length, len));
-            if(utf8)
-            {
-                return System.Text.Encoding.UTF8.GetString(byteResult);
-            }
-            else
-            {
-                return new BencodedString(new string(byteResult.Select(b => (char)b).ToArray()));
-            }
+        
+            return new BencodedString(new string(byteResult.Select(b => (char)b).ToArray()));
           
         }
 
+        /// <summary>
+        /// 解析整数
+        /// </summary>
+        /// <returns></returns>
         private static BencodedInteger ParseInteger()
         {
             char endChar = 'e';
@@ -144,6 +158,11 @@ namespace Torrent.Client.Bencoding
             return result;
         }
 
+        /// <summary>
+        /// 读取整数
+        /// </summary>
+        /// <param name="endChar"></param>
+        /// <returns></returns>
         private static long ReadIntegerValue(char endChar)
         {
             char c;
@@ -164,6 +183,10 @@ namespace Torrent.Client.Bencoding
             return result*negative;
         }
 
+        /// <summary>
+        /// 根据当前数据位置的字符串判断当前数据类型
+        /// </summary>
+        /// <returns></returns>
         private static BencodedNodeType CurrentNodeType()
         {
             char c;

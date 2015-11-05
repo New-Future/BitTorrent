@@ -31,7 +31,7 @@ namespace Torrent.Client
         }
 
         public string Agent;
-        public string DownloadFolder { get; set; }
+        //public string DownloadFolder { get; set; }
 
         public string Version { get { return ID_HEAD.Trim('-').Trim('R').Trim('T'); } }
 

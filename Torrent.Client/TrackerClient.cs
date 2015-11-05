@@ -11,6 +11,7 @@ using Torrent.Client.Extensions;
 namespace Torrent.Client
 {
     /// <summary>
+    /// Tracker客户端，和服务器之间通信
     /// Performs communication with a remote BitTorrent tracker.
     /// </summary>
     public class TrackerClient
@@ -30,8 +31,16 @@ namespace Torrent.Client
         /// </summary>
         public IEnumerable<string> Announces { get; private set; }
 
+        /// <summary>
+        /// 多个Announces时有效
+        /// </summary>
         public string PreferredAnnounce { get; private set; }
 
+        /// <summary>
+        /// URL编码
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         private string UrlEncode(byte[] source)
         {
             var builder = new StringBuilder();
@@ -40,6 +49,16 @@ namespace Torrent.Client
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 向服务器请求数据
+        /// </summary>
+        /// <param name="infoHash">info_hash参数</param>
+        /// <param name="peerId">peer_id</param>
+        /// <param name="port">端口</param>
+        /// <param name="downloaded">下载状态</param>
+        /// <param name="uploaded">上传状态</param>
+        /// <param name="left">剩余量</param>
+        /// <returns></returns>
         public TrackerResponse AnnounceStart(byte[] infoHash, string peerId, ushort port, long downloaded, long uploaded,
                                              long left)
         {
@@ -49,6 +68,7 @@ namespace Torrent.Client
         }
 
         /// <summary>
+        /// 获取请求结果
         /// Sends a HTTP request to the tracker and returns the response.
         /// </summary>
         /// <param name="requestData">The data for the request that will be sent to the tracker.</param>
@@ -77,6 +97,13 @@ namespace Torrent.Client
             return response;
         }
 
+        /// <summary>
+        /// 构建请求数据URL和header
+        /// 并发送请求
+        /// </summary>
+        /// <param name="requestData"></param>
+        /// <param name="announceURL"></param>
+        /// <returns></returns>
         private TrackerResponse AttemptGet(TrackerRequest requestData, string announceURL)
         {
             var parameters = new Dictionary<string, string>
@@ -108,7 +135,7 @@ namespace Torrent.Client
             var request = (HttpWebRequest) WebRequest.Create(announceURL + urlBuilder);
             request.KeepAlive = false;
             request.Method = "GET";
-            request.UserAgent = Global.Instance.Agent;
+            request.UserAgent = Global.Instance.Agent;//伪装Agent
             try
             {
                 WebResponse response = request.GetResponse();

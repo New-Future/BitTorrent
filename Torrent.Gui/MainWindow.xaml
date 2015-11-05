@@ -84,7 +84,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Margin="2" Grid.Row="0">
-            <Button Command="{Binding AddTransferCommand}" Style="{StaticResource DefBtn}" Content="添加种子文件" Margin="150,1" UseLayoutRounding="False" IsDefault="True" Cursor="Hand" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="178.5"/>
+            <Button Command="{Binding AddTransferCommand}" Style="{StaticResource DefBtn}" Content="添加种子文件" Margin="150,1" UseLayoutRounding="False" IsDefault="True" Cursor="Hand" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="178.5" ToolTip="打开种子，然选择下载位置"/>
         </StackPanel>
         <ListBox Margin="2" Grid.Row="1" ItemsSource="{Binding Transfers}" HorizontalContentAlignment="Stretch"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -156,6 +156,10 @@
 
                 </DataTemplate>
             </ListBox.ItemTemplate>
+  
         </ListBox>
+        <StackPanel Height="19" Margin="1,0" Grid.Row="1" VerticalAlignment="Bottom" Width="511">
+                <TextBlock x:Name="textBlock" TextWrapping="Wrap" Foreground="#AF14F333" TextAlignment="Center" FontSize="10.667" IsEnabled="False" Cursor="Hand" Margin="0,2"><Run Foreground="Blue" Text="可将种子文件拖至窗体内然后选下载放位置"/><Run Foreground="#AF323A33" Text="——"/><Run Background="White" Foreground="#AF323A33" FontFamily="NSimSun" Text="NKbt-Torrent客户端V1.0 by NewFuture"/></TextBlock>
+            </StackPanel>
     </Grid>
 </Window>

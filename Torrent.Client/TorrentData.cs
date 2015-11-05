@@ -116,7 +116,7 @@ namespace Torrent.Client
             var alist = new BencodedList();
             announceList.ForEach(a => alist.Add(new BencodedList {new BencodedString(a)}));
             res.Add("announce-list", alist);
-            res.Add("created by", new BencodedString("rtTorrent/" + clientVersion));
+            res.Add("created by", new BencodedString("NKTorrent/" + clientVersion));
             res.Add("creation date", new BencodedInteger(GetUnixTime()));
             res.Add("encoding", new BencodedString("UTF-8"));
 
@@ -181,7 +181,7 @@ namespace Torrent.Client
 
             List<byte[]> checksumList = GetRawChecksums(info, pieceLength);
             BencodedString name = GetNameFromInfo(info);
-            List<FileEntry> decodedFiles = DecodeFiles(info, name);
+            List <FileEntry> decodedFiles = DecodeFiles(info,NameToUtf8(name));
             if (metadata.ContainsKey("announce-list"))
             {
                 var announceList = (BencodedList) metadata["announce-list"];
@@ -192,7 +192,7 @@ namespace Torrent.Client
             Files = decodedFiles.AsReadOnly();
             PieceLength = pieceLength;
             PieceCount = Checksums.Count;
-            Name = Encoding.UTF8.GetString(name.ToString().ToCharArray().Select(b => (byte)b).ToArray());
+            Name = NameToUtf8(name);
             InfoHash = ComputeInfoHash(info);
             Announces = CreateAnnouces(AnnounceURL, AnnounceList);
             TotalLength = Files.Sum(f => f.Length);
@@ -242,7 +242,7 @@ namespace Torrent.Client
             return name;
         }
 
-        private List<FileEntry> DecodeFiles(BencodedDictionary info, BencodedString name)
+        private List<FileEntry> DecodeFiles(BencodedDictionary info,String name)
         {
             var decodedFiles = new List<FileEntry>();
             if (info.ContainsKey("files"))
@@ -251,7 +251,7 @@ namespace Torrent.Client
                 CheckInfoFiles(files);
                 foreach (BencodedDictionary file in files)
                 {
-                    FileEntry torrentFile = CreateTorrentFile(file);
+                    FileEntry torrentFile = CreateTorrentFile(file,name);
                     decodedFiles.Add(torrentFile);
                 }
             }
@@ -264,12 +264,13 @@ namespace Torrent.Client
             return decodedFiles;
         }
 
-        private FileEntry CreateTorrentFile(BencodedDictionary file)
+        private FileEntry CreateTorrentFile(BencodedDictionary file,string name="")
         {
             string[] filePathList = (file["path"] as BencodedList).Select(s => (string) (s as BencodedString)).ToArray();
             var fileLength = file["length"] as BencodedInteger;
             CheckFileProperties(filePathList, fileLength);
             string filePath = Path.Combine(filePathList);
+            filePath = name+'/'+NameToUtf8(filePath);
             var torrentFile = new FileEntry(filePath, fileLength);
             return torrentFile;
         }
@@ -319,5 +320,10 @@ namespace Torrent.Client
             if (!metadata.ContainsKey("info"))
                 throw new TorrentException(string.Format("Invalid metadata, 'info' not found."));
         }
+
+        private string NameToUtf8(string name)
+        {
+            return Encoding.UTF8.GetString(name.ToString().ToCharArray().Select(b => (byte)b).ToArray());
+        } 
     }
 }

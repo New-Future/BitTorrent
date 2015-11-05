@@ -10,6 +10,7 @@ namespace Torrent.Client
 {
     /// <summary>
     /// Represents a BitTorrent data transfer.
+    /// 根据BT文件信息创建TorrentDaa对象
     /// </summary>
     public class TorrentTransfer
     {
@@ -48,15 +49,13 @@ namespace Torrent.Client
         {
             Contract.Requires(torrentStream != null);
 
-            using (torrentStream) //разкодиране на метаданните
+            using (torrentStream)
             using (var reader = new BinaryReader(torrentStream))
             {
                 byte[] bytes = reader.ReadBytes((int) reader.BaseStream.Length);
                 Data = new TorrentData(bytes);
             }
-            //създаване на класове за комуникация с тракера,
-            //отчитане на състояние
-            DownloadFolder = Path.Combine(downloadPath, Data.Name);
+            DownloadFolder = downloadPath;
         }
 
         /// <summary>

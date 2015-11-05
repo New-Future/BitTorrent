@@ -12,6 +12,9 @@ using System.Linq;
 using System.Threading;
 namespace Torrent.Client
 {
+    /// <summary>
+    /// Torrent的model基类
+    /// </summary>
     public abstract class TorrentMode
     {
         public ConcurrentDictionary<string, PeerState> Peers { get; protected set; }
@@ -26,21 +29,21 @@ namespace Torrent.Client
 
         protected TorrentMode(BlockManager manager, BlockStrategist strategist, TorrentData metadata, TransferMonitor monitor)
         {
-            //инициализация на обект за следене на пренесените данни
-            Monitor = monitor;
-            //обект за управляване на записа на парчета върху файловата система
+            //传输的数据的对象跟踪的初始化
+             Monitor = monitor;
+            //文件管理
             BlockManager = manager;
-            //обект за управление на заявките на парчета към пиърите
+            //快对象管理
             BlockStrategist = strategist;
-            //обект, съдържаш метаданните на торента
+            //元数据
             Metadata = metadata;
-            //съобщение за здрависване, което се използва от този TorrentMode
+            //握手消息
             DefaultHandshake = new HandshakeMessage(Global.Instance.PeerId, new byte[8], Metadata.InfoHash, "BitTorrent protocol");
-            //конкурентен речник за съхранение на състоянието на активните пиъри
+            //在字典中保存现在的状态
             Peers = new ConcurrentDictionary<string, PeerState>();
-            //прикачане на събитието за изключения на BlockManager-а
+            //异常处理
             manager.RaisedException += (s, e) => HandleException(e.Value);
-            //инициализация на теймера за изпращане на KeepAlive съобщения
+            //定时器初始化发送keepalive消息
             KeepAliveTimer = new Timer(SendKeepAlives);
         }
 
@@ -54,15 +57,14 @@ namespace Torrent.Client
 
         public virtual void Stop(bool closeStreams)
         {
-            //ако вече спираме, не можем да спрем отново
+            //已经停止
             if (Stopping) return;
             Stopping = true;
-            //изчистване на речника с пиъри
+            //清空peer
             Peers.Clear();
-            //освобождаване на таймера за изпращане на KeepAlive 
+            //释放定时器
             KeepAliveTimer.Dispose();
-            //ако closeStreams е true, освобождаваме BlockManager,
-            //което затваря отворените файлове
+            //释放块，关闭文件
             if(closeStreams)
                 BlockManager.Dispose();
         }
@@ -83,7 +85,7 @@ namespace Torrent.Client
         }
 
         protected virtual void HandleMessage(PeerMessage message, PeerState peer)
-        {   //проверка на типа съобщение и извикване на съответния обработващ метод
+        {   //检查消息的类型和调用合适的处理方法
             if (message is HandshakeMessage) HandleHandshake((HandshakeMessage)message, peer);
             else if (message is ChokeMessage) HandleChoke((ChokeMessage)message, peer);
             else if (message is UnchokeMessage) HandleUnchoke((UnchokeMessage)message, peer);
@@ -93,7 +95,7 @@ namespace Torrent.Client
             else if (message is HaveMessage) HandleHave((HaveMessage)message, peer);
             else if (message is PieceMessage) HandlePiece((PieceMessage)message, peer);
             else if (message is RequestMessage) HandleRequest((RequestMessage)message, peer);
-            //приемане на следващото съобщение от пиъра
+            //接收的下一条消息
             ReceiveMessage(peer);
         }
 

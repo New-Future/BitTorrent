@@ -28,11 +28,19 @@ namespace Torrent.Gui
             IOService = ioService;
         }
 
+        /// <summary>
+        /// 删除种子任务
+        /// </summary>
+        /// <param name="transfer"></param>
         private void RemoveTransfer(Transfer transfer)
         {
             Transfers.Remove(transfer);
         }
 
+        /// <summary>
+        /// 添加种子
+        /// </summary>
+        /// <param name="path"></param>
         private void AddTransfer(string path)
         {
             if (path != null && Path.GetExtension(path) != ".torrent")
