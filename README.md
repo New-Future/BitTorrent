@@ -34,3 +34,6 @@ BitTorrent for NKU
     ├── MainViewModel.cs        主窗口ViewModel
     └── TransferViewModel.cs    控制模块ViewModel  
 ```
+
+### License
+(MIT)[License]
