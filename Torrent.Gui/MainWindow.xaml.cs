@@ -51,7 +51,7 @@ namespace Torrent.Gui
             return null;
         }
 
-        private void Drop(object sender, DragEventArgs e)
+        new private void Drop(object sender, DragEventArgs e)
         {
             var str = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach(var file in str)
