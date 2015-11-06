@@ -36,4 +36,4 @@ BitTorrent for NKU
 ```
 
 ### License
-(MIT)[License]
+源码许可协议[MIT](License)
